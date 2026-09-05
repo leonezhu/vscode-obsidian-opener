@@ -1,0 +1,58 @@
+{
+  "name": "obsidian-opener",
+  "displayName": "Obsidian Opener",
+  "description": "在 Obsidian 中打开当前聚焦的 Markdown 文件（快捷键 + 编辑器右上角按钮）",
+  "version": "0.1.0",
+  "publisher": "xiaoxiong",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "obsidian-opener.openInObsidian",
+        "title": "Obsidian: 在 Obsidian 中打开当前文件",
+        "icon": {
+          "light": "icons/obsidian.svg",
+          "dark": "icons/obsidian.svg"
+        }
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "obsidian-opener.openInObsidian",
+        "key": "alt+o",
+        "mac": "alt+o",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "obsidian-opener.openInObsidian",
+          "group": "navigation",
+          "when": "editorLangId == markdown"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Obsidian Opener",
+      "properties": {
+        "obsidianOpener.vaultName": {
+          "type": "string",
+          "default": "notes",
+          "description": "Obsidian vault 名称（对应 obsidian://open?vault=... 参数）"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}
