@@ -18,7 +18,7 @@
 
 ```bash
 npx @vscode/vsce package --allow-missing-repository
-code --install-extension obsidian-opener-0.3.0.vsix
+code --install-extension obsidian-opener-0.3.1.vsix
 ```
 
 ### 用法
@@ -31,11 +31,13 @@ code --install-extension obsidian-opener-0.3.0.vsix
 
 生成的 URL 有两种模式：
 
-**自动模式（默认，零配置）**——用文件绝对路径，由 Obsidian 自动匹配包含它的已注册 vault；文件不在任何 vault 内时，新版 Obsidian 会按独立 md 文件打开：
+**自动模式（默认，零配置）**——文件在某个已注册 vault 内时，用文件绝对路径打开（`obsidian://open?path=...`，由 Obsidian 自动匹配 vault）；文件不在任何 vault 内时，插件改用系统方式把文件交给 Obsidian 以独立文件打开——注意 `path=` URI 本身**不支持** vault 外的文件（会报 "Vault not found"），独立文件打开需要 Obsidian 1.14+：
 
+```bash
+open -b md.obsidian /Users/me/Documents/a.md   # macOS
 ```
-obsidian://open?path=%2FUsers%2Fme%2Fnotes%2FReferences%2FDanKoe%2F2026-08-29-xxx.md
-```
+
+Windows/Linux 通过 `.md` 文件关联打开（1.14 起可将 Obsidian 设为默认 Markdown 应用）。
 
 **指定 vault 模式**——设置 `obsidianOpener.vaultName` 后启用，用 vault 名 + 相对路径：
 
@@ -46,7 +48,7 @@ obsidian://open?vault=notes&file=References%2FDanKoe%2F2026-08-29-xxx
 点击图标时，插件会先校验：当前文档所在 repo（工作区根）与该 vault 在 Obsidian 注册表中的实际目录是否一致：
 
 - 一致 → 用 `vault=` + 相对 vault 根的路径打开（去掉 `.md` 后缀，URL 编码）
-- 不一致（如文件属于别的仓库、或根本不在工作区内）→ 降级为独立文件方式（`path=` 绝对路径）打开
+- 不一致（如文件属于别的仓库、或根本不在工作区内）→ 改用系统方式以独立文件交给 Obsidian（需 Obsidian 1.14+）
 - 注册表里找不到该名字的 vault（无法校验）→ 保持旧行为，假定工作区根 = vault 根
 
 ### 配置

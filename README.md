@@ -18,7 +18,7 @@ Or install from a local `.vsix`:
 
 ```bash
 npx @vscode/vsce package --allow-missing-repository
-code --install-extension obsidian-opener-0.3.0.vsix
+code --install-extension obsidian-opener-0.3.1.vsix
 ```
 
 ### Usage
@@ -31,11 +31,13 @@ code --install-extension obsidian-opener-0.3.0.vsix
 
 The generated URL has two modes:
 
-**Auto mode (default, zero config)** — uses the file's absolute path, and Obsidian matches it against registered vaults; if the file is not inside any vault, new versions of Obsidian open it as a standalone Markdown file:
+**Auto mode (default, zero config)** — if the file is inside a registered vault, opens it with its absolute path (`obsidian://open?path=...`, Obsidian matches the vault automatically). If it is not inside any vault, the extension hands the file to Obsidian as a standalone file through the OS — the `path=` URI does **not** support files outside vaults (Obsidian would show "Vault not found"); standalone opening requires Obsidian 1.14+:
 
 ```
-obsidian://open?path=%2FUsers%2Fme%2Fnotes%2FReferences%2FDanKoe%2F2026-08-29-xxx.md
+open -b md.obsidian /Users/me/Documents/a.md   # macOS
 ```
+
+On Windows/Linux the file is opened via the `.md` file association (set Obsidian as the default Markdown app, supported since 1.14).
 
 **Named vault mode** — set `obsidianOpener.vaultName` to enable, using vault name + relative path:
 
@@ -46,7 +48,7 @@ obsidian://open?vault=notes&file=References%2FDanKoe%2F2026-08-29-xxx
 When you click the button, the extension first verifies whether the current document's repo (workspace root) actually matches that vault's directory in Obsidian's vault registry:
 
 - Match → open with `vault=` + the path relative to the vault root (`.md` suffix stripped, URL-encoded)
-- No match (the file belongs to another repo, or no workspace is open) → fall back to the standalone-file method (`path=` absolute path)
+- No match (the file belongs to another repo, or no workspace is open) → hand the file to Obsidian as a standalone file through the OS (requires Obsidian 1.14+)
 - The vault name cannot be resolved from the registry → keep the legacy behavior (assume workspace root = vault root)
 
 ### Configuration

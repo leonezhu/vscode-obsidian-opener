@@ -2,7 +2,7 @@
   "name": "obsidian-opener",
   "displayName": "Obsidian Opener",
   "description": "在 Obsidian 中打开当前聚焦的 Markdown 文件（快捷键 + 编辑器右上角按钮）",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "leonezhu",
   "repository": {
     "type": "git",
@@ -51,7 +51,7 @@
         "obsidianOpener.vaultName": {
           "type": "string",
           "default": "",
-          "description": "Obsidian vault 名称。留空（推荐）时自动模式：用文件绝对路径由 Obsidian 匹配已注册 vault，不在任何 vault 内时按独立文件打开；填写后点击时会校验当前文档所在工作区根与该 vault 是否一致，一致才用 vault= 打开，否则按独立文件（path=）打开"
+          "description": "Obsidian vault 名称。留空（推荐）时自动模式：文件在已注册 vault 内用 path= 打开，不在任何 vault 内则以独立文件方式交给 Obsidian（1.14+）；填写后点击时会校验当前文档所在工作区根与该 vault 是否一致，一致才用 vault= 打开，否则以独立文件方式打开"
         }
       }
     }
