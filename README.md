@@ -1,41 +1,74 @@
 # Obsidian Opener
 
-在 VSCode 里打开 Obsidian vault 的 md 文件时，一键跳回本地 Obsidian。
+[English](#english) | [中文](./README.zh-CN.md)
 
-## 用法
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue)](https://marketplace.visualstudio.com/items?itemName=leonezhu.obsidian-opener)
 
-1. **快捷键**：`Alt+O`（聚焦编辑器时生效）
-2. **按钮**：md 文件编辑器右上角有一个紫色宝石图标，点击即在 Obsidian 打开当前文件
-3. **命令面板**：`Obsidian: 在 Obsidian 中打开当前文件`
+## English
 
-生成的 URL 格式：
+Open the Markdown file you are editing in VS Code inside local Obsidian, with one click.
+
+### Install
+
+From the VS Code Marketplace:
+
+**[Obsidian Opener — Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=leonezhu.obsidian-opener)**
+
+Or install from a local `.vsix`:
+
+```bash
+npx @vscode/vsce package --allow-missing-repository
+code --install-extension obsidian-opener-0.3.0.vsix
+```
+
+### Usage
+
+1. **Keyboard shortcut**: `Alt+O` on Windows/Linux, `⌘⌥O` (⌘ + Option + O) on macOS
+2. **Button**: a purple gem icon in the top-right corner of a Markdown editor — click it to open the current file in Obsidian
+3. **Command Palette**: `Obsidian: Open Current File in Obsidian`
+
+### How it works
+
+The generated URL has two modes:
+
+**Auto mode (default, zero config)** — uses the file's absolute path, and Obsidian matches it against registered vaults; if the file is not inside any vault, new versions of Obsidian open it as a standalone Markdown file:
+
+```
+obsidian://open?path=%2FUsers%2Fme%2Fnotes%2FReferences%2FDanKoe%2F2026-08-29-xxx.md
+```
+
+**Named vault mode** — set `obsidianOpener.vaultName` to enable, using vault name + relative path:
 
 ```
 obsidian://open?vault=notes&file=References%2FDanKoe%2F2026-08-29-xxx
 ```
 
-- `file` 为相对 vault 根的路径，去掉 `.md` 后缀，URL 编码
-- 文件不在工作区内时退化为文件名（Obsidian 按最短唯一路径解析）
+When you click the button, the extension first verifies whether the current document's repo (workspace root) actually matches that vault's directory in Obsidian's vault registry:
 
-## 设置
+- Match → open with `vault=` + the path relative to the vault root (`.md` suffix stripped, URL-encoded)
+- No match (the file belongs to another repo, or no workspace is open) → fall back to the standalone-file method (`path=` absolute path)
+- The vault name cannot be resolved from the registry → keep the legacy behavior (assume workspace root = vault root)
 
-| 设置项 | 默认值 | 说明 |
+### Configuration
+
+Open VS Code Settings, search for "Obsidian", and set **Obsidian Opener: Vault Name** to your vault name (the vault root folder's name, e.g. `notes`):
+
+![Configure obsidianOpener.vaultName in VS Code Settings](assets/vault-setting.png)
+
+| Setting | Default | Description |
 |---|---|---|
-| `obsidianOpener.vaultName` | `notes` | Obsidian vault 名称 |
+| `obsidianOpener.vaultName` | `""` (empty) | Leave empty for auto mode; set a vault name to open files in that vault, with a standalone-file fallback when the file is not in it |
 
-## 安装
+### Testing
 
-```bash
-npx @vscode/vsce package --allow-missing-repository
-code --install-extension obsidian-opener-0.1.0.vsix
-```
-
-## 测试
-
-零依赖，用 Node 内置 test runner：
+Zero dependencies, uses Node's built-in test runner:
 
 ```bash
 npm test
 ```
 
-黄金用例来自真实 Obsidian URL（用户提供的 DanKoe 文章链接），逐字符比对。
+The golden test cases come from a real Obsidian URL (a DanKoe article link), compared character by character.
+
+## 中文
+
+见 [README.zh-CN.md](./README.zh-CN.md)。

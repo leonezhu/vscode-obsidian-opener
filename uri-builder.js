@@ -25,4 +25,15 @@ function buildObsidianUri(vaultName, relPath) {
   return `obsidian://open?vault=${encodeURIComponent(vaultName)}&file=${file}`;
 }
 
-module.exports = { stripMd, toPosix, buildObsidianUri };
+/**
+ * 绝对路径形式：不需要指定 vault，Obsidian 按路径自动匹配已注册的 vault。
+ * 与 file= 不同，path= 保留完整扩展名。
+ * @param {string} absPath 文件绝对路径，如 "/Users/me/notes/a/b.md"
+ * @returns {string} obsidian://open?path=...
+ */
+function buildPathUri(absPath) {
+  return `obsidian://open?path=${encodeURIComponent(toPosix(absPath))}`;
+}
+
+module.exports = { stripMd, toPosix, buildObsidianUri, buildPathUri };
+
